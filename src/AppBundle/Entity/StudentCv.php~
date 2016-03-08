@@ -125,27 +125,4 @@ class StudentCv
     {
         return $this->studentId;
     }
-
-    /**
-     * Set student
-     *
-     * @param \AppBundle\Entity\Student $student
-     * @return StudentCv
-     */
-    public function setStudent(\AppBundle\Entity\Student $student = null)
-    {
-        $this->student = $student;
-
-        return $this;
-    }
-
-    /**
-     * Get student
-     *
-     * @return \AppBundle\Entity\Student 
-     */
-    public function getStudent()
-    {
-        return $this->student;
-    }
 }
