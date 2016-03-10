@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Employer list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Company</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for employer in employers %}
+            <tr>
+                <td><a href="{{ path('employer_show', { 'id': employer.id }) }}">{{ employer.id }}</a></td>
+                <td>{{ employer.company }}</td>
+                <td>{{ employer.email }}</td>
+                <td>{{ employer.password }}</td>
+                <td>{{ employer.address }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('employer_show', { 'id': employer.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('employer_edit', { 'id': employer.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('employer_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Employer</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ employer.id }}</td>
+            </tr>
+            <tr>
+                <th>Company</th>
+                <td>{{ employer.company }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ employer.email }}</td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>{{ employer.password }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ employer.address }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('employer_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('employer_edit', { 'id': employer.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}
