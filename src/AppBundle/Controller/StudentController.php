@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -16,6 +17,14 @@ use AppBundle\Form\StudentType;
  */
 class StudentController extends Controller
 {
+    /**
+     * @Route("/student")
+     */
+    public function adminAction()
+    {
+        return new Response('student/index.html.twig');
+    }
+
     /**
      * Lists all Student entities.
      *

@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -16,6 +17,14 @@ use AppBundle\Form\EmployerType;
  */
 class EmployerController extends Controller
 {
+    /**
+     * @Route("/employer")
+     */
+    public function adminAction()
+    {
+        return new Response('employer/index.html.twig');
+    }
+
     /**
      * Lists all Employer entities.
      *
