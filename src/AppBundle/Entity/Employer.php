@@ -38,6 +38,13 @@ class Employer
     /**
      * @var string
      *
+     * @ORM\Column(name="password", type="string", length=255)
+     */
+    private $password;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="address", type="string", length=255)
      */
     private $address;
@@ -97,6 +104,29 @@ class Employer
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     * @return Employer
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
     }
 
     /**
