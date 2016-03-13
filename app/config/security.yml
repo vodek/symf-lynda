@@ -4,6 +4,11 @@ security:
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
+        our_db_provider:
+            entity:
+                class: AppBundle:Admin                      b
+                property: username
+
         in_memory:
             memory:
                 users:
@@ -23,28 +28,35 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        default:
+        main:
+            pattern: ^/
             anonymous: ~
             # activate different ways to authenticate
 
             http_basic: ~
+#            provider: our_db_provider
             # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
 
             # form_login: ~
             # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
 
     access_control:
-        # require ROLE_EMPLOYER for /employer*
+        # require ROLE_ADMIN for /employer*
         - { path: ^/employer, roles: ROLE_ADMIN }
 
 
         # require ROLE_STUDENT for /student*
         #- { path: ^/student, roles: ROLE_STUDENT }
 
-        # require ROLE_STUDENT for /student*
+        # require ROLE_ADMIN for /student*
         - { path: ^/student, roles: ROLE_ADMIN }
 
     encoders:
-            Symfony\Component\Security\Core\User\User: plaintext
-#                algorithm: bcrypt
-#                cost: 12
+#            Symfony\Component\Security\Core\User\User: plaintext
+            AppBundle\Entity\Employer:
+                algorithm: bcrypt
+                cost: 12
+
+            AppBundle\Entity\Student:
+                algorithm: bcrypt
+                cost: 12

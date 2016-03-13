@@ -3,6 +3,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Employer
@@ -10,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="employer")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\EmployerRepository")
  */
-class Employer
+class Employer implements UserInterface, \Serializable
 {
     /**
      * @var int
@@ -31,14 +35,20 @@ class Employer
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255)
+     * @ORM\Column(name="email", type="string", length=255, unique=true)
      */
     private $email;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
+     */
+    private $plainPassword;
+
+    /**
      * @var string
      *
-     * @ORM\Column(name="password", type="string", length=255)
+     * @ORM\Column(name="password", type="string", length=64)
      */
     private $password;
 
@@ -48,6 +58,23 @@ class Employer
      * @ORM\Column(name="address", type="string", length=255)
      */
     private $address;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    private $isActive;
+
+    /**
+     * Construct is Active
+     * set value to true
+     *
+     */
+    public function __construct()
+    {
+        $this->isActive=true;
+    }
 
 
     /**
@@ -107,6 +134,24 @@ class Employer
     }
 
     /**
+     * Get plainPassword
+     * @return string
+     */
+    public function getPlainPassword(){
+        return $this->plainPassword;
+    }
+
+    /**
+     * Set plainPassword
+     * @param string $password
+     */
+    public function setPlainPassword($password){
+        $this->plainPassword = $password;
+    }
+
+
+
+    /**
      * Set password
      *
      * @param string $password
@@ -116,17 +161,17 @@ class Employer
     {
         $this->password = $password;
 
-        return $this;
+//        return $this;
     }
 
     /**
-     * Get password
+     * Get salt
      *
-     * @return string
+     * @return null
      */
-    public function getPassword()
+    public function getSalt()
     {
-        return $this->password;
+        return null;
     }
 
     /**
@@ -150,5 +195,94 @@ class Employer
     public function getAddress()
     {
         return $this->address;
+    }
+
+    /**
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     * @since 5.1.0
+     */
+    public function serialize()
+    {
+
+        return serialize(array($this->id,
+            $this->email,
+            $this->password));
+    }
+
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     * @since 5.1.0
+     */
+    public function unserialize($serialized)
+    {
+
+        list(
+            $this->id,
+            $this->email,
+            $this->password)=$this->unserialize($serialized);
+    }
+
+    /**
+     * Returns the roles granted to the user.
+     *
+     * <code>
+     * public function getRoles()
+     * {
+     *     return array('ROLE_USER');
+     * }
+     * </code>
+     *
+     * Alternatively, the roles might be stored on a ``roles`` property,
+     * and populated in any number of different ways when the user object
+     * is created.
+     *
+     * @return Role[] The user roles
+     */
+    public function getRoles()
+    {
+       return array('ROLE_EMPLOYER');
+    }
+
+    /**
+     * Returns the password used to authenticate the user.
+     *
+     * This should be the encoded password. On authentication, a plain-text
+     * password will be salted, encoded, and then compared to this value.
+     *
+     * @return string The password
+     */
+    public function getPassword()
+    {
+
+        return $this->password;
+    }
+
+    /**
+     * Returns the username used to authenticate the user.
+     *
+     * @return string The username
+     */
+    public function getUsername()
+    {
+
+        return $this->email;
+    }
+
+    /**
+     * Removes sensitive data from the user.
+     *
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
+     */
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
     }
 }
