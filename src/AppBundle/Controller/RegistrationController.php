@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Form\EmployerType;
+use AppBundle\Form\StudentType;
 use AppBundle\Entity\Employer;
 use AppBundle\Entity\Student;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -28,13 +29,15 @@ class RegistrationController extends Controller
         if ($who == 'employer'){
             $user = new Employer();
             $template = 'AppBundle:registration:employer.html.twig';
+            $form = $this->createForm(EmployerType::class, $user);
         }
         elseif ($who == 'student'){
             $user = new Student();
             $template = 'AppBundle:registration:student.html.twig';
+            $form = $this->createForm(StudentType::class, $user);
         }
 
-        $form = $this->createForm(EmployerType::class, $user);
+
 
 
         //handle submit

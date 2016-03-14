@@ -18,10 +18,11 @@ class StudentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('yearOffGrdaduation')
+
             ->add('fName')
             ->add('lName')
             ->add('email')
+            ->add('yearOfGraduation')
             ->add('plainPassword', RepeatedType::class, array(
                 'type' => PasswordType::class,
                 'first_options' => array('label' => 'Password'),

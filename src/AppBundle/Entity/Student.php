@@ -3,6 +3,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Student
@@ -10,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="student")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\StudentRepository")
  */
-class Student
+class Student implements UserInterface, \Serializable
 {
     /**
      * @var int
@@ -24,9 +28,16 @@ class Student
     /**
      * @var string
      *
-     * @ORM\Column(name="year_off_grdaduation", type="string", length=255)
+     * @ORM\Column(name="email", type="string", length=255)
      */
-    private $yearOffGrdaduation;
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="year_of_graduation", type="string", length=255)
+     */
+    private $yearOfGraduation;
 
     /**
      * @var string
@@ -42,12 +53,13 @@ class Student
      */
     private $lName;
 
+
     /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(max=4096)
      */
-    private $email;
+    private $plainPassword;
+
 
     /**
      * @var string
@@ -57,8 +69,21 @@ class Student
     private $password;
 
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    private $isActive;
+
+    /**
+     * Construct is Active
+     * set value to true
+     *
+     */
     public function __construct()
     {
+        $this->isActive=true;
     }
 
     /**
@@ -72,26 +97,26 @@ class Student
     }
 
     /**
-     * Set yearOffGrdaduation
+     * Set yearOfGrdaduation
      *
-     * @param string $yearOffGrdaduation
+     * @param string $yearOfGrdaduation
      * @return Student
      */
-    public function setYearOffGrdaduation($yearOffGrdaduation)
+    public function setYearOfGraduation($yearOfGraduation)
     {
-        $this->yearOffGrdaduation = $yearOffGrdaduation;
+        $this->yearOfGraduation = $yearOfGraduation;
 
         return $this;
     }
 
     /**
-     * Get yearOffGrdaduation
+     * Get yearOfGrdaduation
      *
-     * @return string 
+     * @return string
      */
-    public function getYearOffGrdaduation()
+    public function getYearOfGraduation()
     {
-        return $this->yearOffGrdaduation;
+        return $this->yearOfGraduation;
     }
 
     /**
@@ -156,11 +181,39 @@ class Student
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
         return $this->email;
+    }
+
+
+    /**
+     * Get salt
+     *
+     * @return null
+     */
+    public function getSalt()
+    {
+        return null;
+    }
+
+
+    /**
+     * Get plainPassword
+     * @return string
+     */
+    public function getPlainPassword(){
+        return $this->plainPassword;
+    }
+
+    /**
+     * Set plainPassword
+     * @param string $password
+     */
+    public function setPlainPassword($password){
+        $this->plainPassword = $password;
     }
 
     /**
@@ -173,16 +226,93 @@ class Student
     {
         $this->password = $password;
 
-        return $this;
+//        return $this;
     }
+
+
+    /**
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     * @since 5.1.0
+     */
+    public function serialize()
+    {
+
+        return serialize(array($this->id,
+            $this->email,
+            $this->password));
+    }
+
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized <p>
+     * The string representation of the object.
+     * </p>
+     * @return void
+     * @since 5.1.0
+     */
+    public function unserialize($serialized)
+    {
+
+        list(
+            $this->id,
+            $this->email,
+            $this->password)=$this->unserialize($serialized);
+    }
+
+    /**
+     * Returns the roles granted to the user.
+     *
+     * <code>
+     * public function getRoles()
+     * {
+     *     return array('ROLE_USER');
+     * }
+     * </code>
+     *
+     * Alternatively, the roles might be stored on a ``roles`` property,
+     * and populated in any number of different ways when the user object
+     * is created.
+     *
+     * @return Role[] The user roles
+     */
+    public function getRoles()
+    {
+        return array('ROLE_STUDENT');
+    }
+
 
     /**
      * Get password
      *
-     * @return string 
+     * @return string
      */
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Returns the username used to authenticate the user.
+     *
+     * @return string The username
+     */
+    public function getUsername()
+    {
+
+        return $this->email;
+    }
+
+    /**
+     * Removes sensitive data from the user.
+     *
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
+     */
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
     }
 }
